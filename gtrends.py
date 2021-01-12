@@ -14,11 +14,15 @@ trending_searches_df = pytrends.trending_searches(pn='germany')
 print(trending_searches_df.head(20))
 
 # Extract data about keyword
-kw_list = ["anosmia", "depression", "vaccine"]
-pytrends.build_payload(kw_list, cat='0', timeframe='today 5-y', geo='US', gprop='')
-data = pytrends.interest_over_time()
+kw_list = ["lockdown", "vaccine", "homeschooling", "mortality"]
+pytrends.build_payload(kw_list, cat='0', timeframe='2019-01-01 2021-01-01', geo='US', gprop='')
+data = pytrends.interest_over_time().drop(['isPartial'], axis = 1)
 data.head()
 
 # Plot data
-data.plot(title='Anosmia, Depression and Vaccine Searches on Google for the last 5 years')
-plt.show
+
+data.plot()
+plt.ylabel("relative weekly searches")
+plt.savefig('covid_searches.png')
+
+#sns.lineplot(data=data, x="date", y="depression")
