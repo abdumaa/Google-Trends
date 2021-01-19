@@ -10,17 +10,21 @@ from pytrends.request import TrendReq
 pytrends = TrendReq(hl='en-US', tz=360) #, tz=360, retries=10, backoff_factor=0.5
 
 # Daily Trend in Germany
-trending_searches_df = pytrends.trending_searches(pn='germany')
-print(trending_searches_df.head(20))
+ts_df = pytrends.trending_searches(pn='germany')
+ts_df.head()
 
 # Extract data for Covid-related keywords
 kw_list = ["lockdown", "vaccine", "unemployment", "zoom"]
 pytrends.build_payload(kw_list, cat='0', timeframe='2019-10-01 2021-01-01', geo='US', gprop='')
-data_c = pytrends.interest_over_time().drop(['isPartial'], axis = 1)
-data_c.head()
+df_covid = pytrends.interest_over_time()#.drop(['isPartial'], axis = 1)
+df_covid.head()
+
+# Interest by region
+df_creg = pytrends.interest_by_region(resolution='COUNTRY', inc_low_vol=True, inc_geo_code=False)
+df_creg
 
 # Plot data
-data_c.plot()
+df_covid.plot()
 plt.ylabel("relative weekly searches")
 plt.savefig('covid_searches.png')
 
