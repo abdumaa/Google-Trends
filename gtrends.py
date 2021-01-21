@@ -3,6 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import yfinance as yf
+import datetime
+import time
+import requests
 
 # Import pytrends API
 from pytrends.request import TrendReq
@@ -19,6 +23,14 @@ kw_list = ["lockdown", "vaccine", "unemployment", "zoom"]
 pytrends.build_payload(kw_list, cat='0', timeframe='2019-10-01 2021-01-01', geo='US', gprop='')
 df_covid = pytrends.interest_over_time()#.drop(['isPartial'], axis = 1)
 df_covid.head()
+
+# Plot data
+df_covid.plot()
+plt.ylabel("relative weekly searches")
+plt.savefig('covid_searches.png')
+
+
+
 
 # Interest by region for unemployment
 kw_list = ["unemployment"]
@@ -51,16 +63,11 @@ fig.savefig('unemployment_rate.png')
 
 
 
-# Plot data
-df_covid.plot()
-plt.ylabel("relative weekly searches")
-plt.savefig('covid_searches.png')
-
-
 # Finding top trending stocks
-kw_list2 = ['stock price']
+kw_list2 = ['share price']
 pytrends.build_payload(kw_list2, cat='0', timeframe='now 1-H', geo='', gprop='')
 related_df = pytrends.related_queries()
+
 top_queries=[]
 rising_queries=[]
 for key, value in related_df.items():
@@ -71,6 +78,25 @@ for key, value in related_df.items():
             rising_queries.append(v1)
 
 top_queries
+rising_queries
 
 
+# Google data for 'apple share' searches
+kw_list = ["apple share"]
+pytrends.build_payload(kw_list, cat='0', timeframe='2020-07-01 2021-01-01', geo='', gprop='')
+df_stocks = pytrends.interest_over_time()#.drop(['isPartial'], axis = 1)
+df_stocks = df_stocks.rename(columns={'apple share': 'relative searches'})
+
+# Real stock prices for apple
+start = datetime.datetime(2020,7,1)
+end = datetime.datetime(2021,1,1)
+stock = []
+stock = yf.download("AAPL", start=start, end=end, progress=None)
+stock = stock["Close"]
+
+# Plot data
+df_stocks.plot()
+stock.plot()
+plt.title('Stock Price in $ and Relative Search of Apple Stock (07/2020 -12/2020)')
+plt.savefig('stock_apple.png')
 
