@@ -1,2 +1,2 @@
 # Exploring Google Trends
-This project is about exploring Google Trends Data using the API 'pytrends'. Additionally, I will perform some data visualisation and provide a nice, simple function for others to use.
+This project is about exploring Google Trends Data using the API 'pytrends'.
